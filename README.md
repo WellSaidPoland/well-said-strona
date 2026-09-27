@@ -15,7 +15,7 @@ Marka: navy #14213D, off-white #F4F5F7, warm dark #3C3938; czcionki Cormorant Ga
 - `assets/css/style.css` — wygląd (kolory marki w `:root`), `assets/css/fonts.css` — czcionki na własnym serwerze
 - `assets/js/main.js` — menu, animacje, formularz, kalendarz
 - `api/kontakt.php` — wysyłka formularza (PHPMailer w `api/lib/`), wzór konfiguracji: `api/config.example.php`
-- Plik z hasłem `wellsaid-config.php` leży na serwerze w katalogu głównym konta OVH (obok `www` i `nowa`)
+- Plik z hasłem `wellsaid-config.php` leży na serwerze w katalogu głównym konta OVH (obok `www` i `beta`)
 
 ## Jak wprowadzać zmiany
 - Treści zakładek: `_src/pages/*.html`, części wspólne (menu, stopka, <head>): `_src/partials/`
