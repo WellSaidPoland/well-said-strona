@@ -1191,3 +1191,6 @@ body > main > * { flex-shrink: 0; }
   .legal h2 { font-size: 22px; margin-top: 32px; }
   .legal p, .legal li { font-size: 15px; }
 }
+.footer__legal { display: flex; justify-content: center; gap: 12px; padding: 0 0 18px; font-family: var(--sans); font-size: 12px; letter-spacing: .08em; color: var(--dim); }
+.footer__legal a:hover { color: var(--navy); text-decoration: underline; text-underline-offset: 2px; }
+@media (max-width: 860px) { .footer .wrap { padding-bottom: 20px; } .footer__legal { padding-bottom: 28px; } }
