@@ -14,6 +14,17 @@
       });
     }, { threshold: 0.2 });
     revealEls.forEach(function (el) { io.observe(el); });
+    // zabezpieczenie przy bardzo szybkim przewijaniu: odsłoń wszystko, co już minęło
+    var tick = false;
+    window.addEventListener('scroll', function () {
+      if (tick) return; tick = true;
+      requestAnimationFrame(function () {
+        tick = false;
+        revealEls.forEach(function (el) {
+          if (!el.classList.contains('is-in') && el.getBoundingClientRect().top < window.innerHeight * 0.85) { el.classList.add('is-in'); io.unobserve(el); }
+        });
+      });
+    }, { passive: true });
   } else {
     revealEls.forEach(function (el) { el.classList.add('is-in'); });
   }
@@ -77,6 +88,85 @@
   $$('[data-marquee]').forEach(function (t) {
     $$('img', t).forEach(function (img) {
       var c = img.cloneNode(true); c.alt = ''; c.setAttribute('aria-hidden', 'true'); t.appendChild(c);
+    });
+  });
+
+  /* ---------- Business: kafelki umiejętności (dotknięcie) ---------- */
+  $$('[data-sk]').forEach(function (t) {
+    t.addEventListener('click', function () {
+      if (window.matchMedia('(hover: hover)').matches && !mobile.matches) return;
+      var open = !t.classList.contains('is-open');
+      $$('[data-sk]').forEach(function (o) { o.classList.remove('is-open'); o.setAttribute('aria-expanded', 'false'); var sg = $('.sk__sign', o); if (sg) sg.textContent = '+'; });
+      t.classList.toggle('is-open', open); t.setAttribute('aria-expanded', open);
+      $('.sk__sign', t).textContent = open ? '−' : '+';
+    });
+  });
+
+  /* ---------- Opinie: koperta (dotknięcie wysuwa kartkę) ---------- */
+  $$('[data-env]').forEach(function (e) {
+    e.addEventListener('click', function (ev) { if (ev.target.closest('a')) return; e.classList.toggle('is-open'); });
+  });
+
+  /* ---------- FAQ: zakładki, pytania, płatność krok po kroku ---------- */
+  var faq = $('[data-faq]');
+  if (faq) {
+    var tabs = $$('[data-tab]', faq), panels = $$('.faq__panel', faq);
+    var openQ = function (q, scroll) {
+      var panel = q.closest('.faq__panel');
+      $$('.fq', panel).forEach(function (o) { if (o !== q) { o.classList.remove('is-open'); $('.fq__q', o).setAttribute('aria-expanded', 'false'); } });
+      q.classList.add('is-open'); $('.fq__q', q).setAttribute('aria-expanded', 'true');
+      if (scroll) setTimeout(function () { window.scrollTo({ top: q.getBoundingClientRect().top + window.scrollY - 90, behavior: 'smooth' }); }, 80);
+    };
+    var showTab = function (i, focusFirst) {
+      tabs.forEach(function (t, j) { t.setAttribute('aria-selected', String(i === j)); t.tabIndex = i === j ? 0 : -1; });
+      panels.forEach(function (p, j) { p.hidden = i !== j; });
+      if (focusFirst !== false) openQ($('.fq', panels[i]));
+    };
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () { showTab(i); });
+      t.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { var n = (i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length; showTab(n); tabs[n].focus(); }
+      });
+    });
+    $$('.fq', faq).forEach(function (q) {
+      $('.fq__q', q).addEventListener('click', function () {
+        if (q.classList.contains('is-open')) { q.classList.remove('is-open'); this.setAttribute('aria-expanded', 'false'); }
+        else openQ(q);
+      });
+    });
+    var goTo = function (n) {
+      var q = document.getElementById('faq-' + n); if (!q) return;
+      showTab(panels.indexOf(q.closest('.faq__panel')), false); openQ(q, true);
+    };
+    $$('[data-faq-go]', faq).forEach(function (a) { a.addEventListener('click', function (e) { e.preventDefault(); goTo(a.dataset.faqGo); }); });
+    var fromHash = function () { if (/^#faq-\d+$/.test(location.hash)) goTo(location.hash.slice(5)); };
+    fromHash(); window.addEventListener('hashchange', fromHash);
+    var pw = $('[data-paywidget]');
+    if (pw) {
+      var data = JSON.parse($('[data-pay-data]').textContent);
+      $$('[data-pay]', pw).forEach(function (b) {
+        var pick = function () {
+          var i = +b.dataset.pay;
+          $$('[data-pay]', pw).forEach(function (o) { o.setAttribute('aria-pressed', String(o === b)); });
+          $('[data-pay-n]', pw).textContent = '0' + (i + 1);
+          $('[data-pay-k]', pw).textContent = data[i][0];
+          $('[data-pay-t]', pw).innerHTML = data[i][1];
+        };
+        b.addEventListener('click', pick);
+        if (window.matchMedia('(hover: hover)').matches) b.addEventListener('mouseenter', pick);
+      });
+    }
+  }
+
+  /* ---------- Akordeony (jedna pozycja otwarta naraz) ---------- */
+  $$('[data-acc]').forEach(function (acc) {
+    $$('.acc__item', acc).forEach(function (it) {
+      var b = $('.acc__btn', it);
+      b.addEventListener('click', function () {
+        var open = !it.classList.contains('is-open');
+        $$('.acc__item', acc).forEach(function (o) { o.classList.remove('is-open'); $('.acc__btn', o).setAttribute('aria-expanded', 'false'); });
+        it.classList.toggle('is-open', open); b.setAttribute('aria-expanded', open);
+      });
     });
   });
 
