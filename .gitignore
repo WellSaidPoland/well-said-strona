@@ -1,0 +1,7 @@
+# systemowe
+.DS_Store
+# konfiguracja z hasłami — NIGDY do GitHuba
+config*.php
+!api/config.example.php
+*.env
+node_modules/

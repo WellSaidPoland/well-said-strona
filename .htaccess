@@ -16,8 +16,8 @@ RewriteRule ^(\.git|_src/|README\.md|api/config\.example\.php|api/lib/) - [F,L]
 </IfModule>
 
 <IfModule mod_headers.c>
-# Wersja testowa (nowa.well-said.pl) nie może trafić do Google
-<If "%{HTTP_HOST} =~ /^nowa\./">
+# Wersja testowa (beta.well-said.pl) nie może trafić do Google
+<If "%{HTTP_HOST} =~ /^beta\./">
 Header always set X-Robots-Tag "noindex, nofollow"
 </If>
 Header always set X-Content-Type-Options "nosniff"
