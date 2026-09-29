@@ -173,7 +173,18 @@ em { font-style: italic; }
   .portrait:hover .quote__t { opacity: 1; transform: none; filter: none; transition-delay: .6s; }
   .portrait:hover .quote__sig { opacity: 1; transform: none; transition-delay: .9s; }
 }
-.portrait__hint { display: none; }
+.portrait__hint { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: center; padding: 24px; pointer-events: none; transition: opacity 200ms var(--ease); }
+.portrait__hint > span { display: flex; align-items: center; gap: 12px; padding: 10px 16px 10px 12px; background: rgba(12,20,40,.82); color: var(--paper); font-family: var(--sans); font-size: 12px; letter-spacing: .2em; white-space: nowrap; }
+.portrait.is-open .portrait__hint, .portrait:focus-visible .portrait__hint { opacity: 0; }
+.tap { position: relative; width: 22px; height: 22px; flex: none; display: flex; align-items: center; justify-content: center; }
+.tap::before { content: ""; position: absolute; inset: 0; border: 1px solid var(--accent); animation: tapPulse 1.8s var(--ease) infinite; }
+.tap::after { content: ""; width: 8px; height: 8px; background: var(--accent); }
+.hint--mouse { display: none; }
+@media (hover: hover) and (pointer: fine) and (min-width: 861px) {
+  .hint--touch { display: none; }
+  .hint--mouse { display: inline; }
+  .portrait:hover .portrait__hint { opacity: 0; }
+}
 
 /* =========================================================
    METODA
@@ -375,9 +386,6 @@ button.cal__cell:hover:not(:disabled) { border-color: var(--navy); }
   .portrait__hint { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: center; padding: 16px; pointer-events: none; transition: opacity 200ms var(--ease); }
   .portrait.is-open .portrait__hint { opacity: 0; }
   .portrait__hint > span { display: flex; align-items: center; gap: 12px; padding: 10px 16px 10px 12px; background: rgba(12,20,40,.82); color: var(--paper); font-family: var(--sans); font-size: 12px; letter-spacing: clamp(.08em, 2.4vw - .5em, .2em); white-space: nowrap; }
-  .tap { position: relative; width: 22px; height: 22px; flex: none; display: flex; align-items: center; justify-content: center; }
-  .tap::before { content: ""; position: absolute; inset: 0; border: 1px solid var(--accent); animation: tapPulse 1.8s var(--ease) infinite; }
-  .tap::after { content: ""; width: 8px; height: 8px; background: var(--accent); }
 
   .method { padding: 64px 0 72px; }
   .method__label { font-size: 15px; margin-bottom: 18px; }
