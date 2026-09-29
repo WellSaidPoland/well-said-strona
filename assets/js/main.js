@@ -337,9 +337,9 @@
       .then(function (r) { return r.json().catch(function () { return { ok: false }; }); })
       .then(function (res) {
         if (res && res.ok) {
-          form.hidden = true;
-          var sent = $('[data-sent]'); sent.hidden = false; sent.focus({ preventScroll: true });
-          sent.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          btn.textContent = 'Dziękuję za wysłanie wiadomości!';
+          btn.classList.add('is-sent');
+          status.textContent = '';
         } else {
           var er = new Error('send'); er.srv = res && res.error; throw er;
         }

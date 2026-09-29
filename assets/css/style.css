@@ -294,11 +294,11 @@ button.cal__cell:hover:not(:disabled) { border-color: var(--navy); }
 .btn { display: inline-block; margin-top: 8px; padding: 16px 44px; background: var(--paper); color: var(--navy-900); font-family: var(--sans); font-size: 13px; letter-spacing: .2em; transition: background .2s var(--ease), opacity .2s; }
 .btn:hover { background: var(--paper-2); }
 .btn:disabled { opacity: .6; cursor: wait; }
+.btn.is-sent, .btn.is-sent:disabled { opacity: 1; cursor: default; background: var(--paper); letter-spacing: .08em; font-size: 15px; padding: 16px 40px; max-width: 100%; }
 .form__legal { max-width: 640px; font-size: 12px; line-height: 1.6; color: var(--dim); text-align: center; }
 .form__legal a { text-decoration: underline; text-underline-offset: 2px; }
 .form__status { font-size: 14px; color: var(--error); text-align: center; min-height: 1em; }
 .hp { position: absolute !important; left: -9999px !important; width: 1px; height: 1px; overflow: hidden; }
-.sent { padding: 28px 0; border-top: 1px solid rgba(167,190,238,.35); border-bottom: 1px solid rgba(167,190,238,.35); text-align: center; font-family: var(--serif); font-size: 26px; font-weight: 300; color: var(--paper); animation: faqFade .5s var(--ease) both; }
 
 /* =========================================================
    STOPKA
