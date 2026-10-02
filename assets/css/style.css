@@ -1223,3 +1223,38 @@ body > main > * { flex-shrink: 0; }
   .footer__right { justify-self: end; display: flex; align-items: center; gap: 28px; }
 }
 @media (max-width: 860px) { .footer__right { display: flex; flex-direction: column; align-items: center; gap: 14px; } }
+
+/* ---------- OPINIE: kartki z opiniami ---------- */
+.revs { background: var(--paper-2); padding: 96px 0 88px; }
+.revs .wrap { display: flex; flex-direction: column; align-items: center; }
+.revs__lb { font-family: var(--serif); font-size: 15px; letter-spacing: .3em; color: var(--navy); margin-bottom: 48px; text-align: center; }
+.revs__list { display: flex; flex-wrap: wrap; justify-content: center; gap: 56px 48px; width: 100%; }
+.rev { position: relative; margin: 0; width: 100%; max-width: 760px; }
+.rev::before { content: ""; position: absolute; inset: 0; background: #eceae4; transform: rotate(-1.4deg); box-shadow: 0 10px 24px rgba(12,20,40,.10); }
+.rev__sheet { position: relative; background: #fbfaf6; color: var(--warm); padding: 104px 72px 52px; box-shadow: 0 18px 44px rgba(12,20,40,.16), 0 2px 6px rgba(12,20,40,.08); transform: rotate(.5deg); }
+.rev__sheet::before, .rev__sheet::after { content: ""; position: absolute; inset: 0; pointer-events: none; }
+.rev__sheet::before { background: url(/assets/img/paper-fiber.svg); opacity: .22; }
+.rev__sheet::after { background: url(/assets/img/paper-grain.svg); opacity: .16; }
+.rev__q { position: absolute; top: 40px; left: 68px; font-family: var(--serif); font-size: 110px; line-height: .8; height: 56px; overflow: hidden; color: var(--navy); opacity: .22; z-index: 1; }
+.rev blockquote { position: relative; z-index: 1; margin: 0; font-family: var(--serif); font-size: 21px; font-weight: 400; line-height: 1.6; color: #2b2a2a; text-align: justify; hyphens: manual; -webkit-hyphens: manual; }
+.rev blockquote p + p { margin-top: 16px; }
+.rev blockquote .heart { font-family: var(--sans); font-size: .8em; color: var(--navy); }
+.rev figcaption { position: relative; z-index: 1; margin-top: 34px; padding-top: 22px; border-top: 1px solid var(--line); display: flex; flex-direction: column; align-items: flex-end; gap: 6px; text-align: right; }
+.rev__name { font-family: var(--serif); font-style: italic; font-size: 28px; line-height: 1.1; color: var(--navy); }
+.rev__course { font-family: var(--sans); font-size: 12px; letter-spacing: .26em; color: var(--slate); }
+.revs__more { margin-top: 72px; display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center; }
+.revs__more p { font-family: var(--sans); font-size: 15px; font-weight: 300; line-height: 1.7; color: var(--warm-2); max-width: 48ch; }
+@media (max-width: 860px) {
+  .revs { padding: 60px 0 56px; }
+  .revs__lb { font-size: 14px; letter-spacing: .28em; margin-bottom: 32px; }
+  .rev__sheet { padding: 76px 24px 32px; transform: rotate(.3deg); }
+  .rev::before { transform: rotate(-1.2deg); }
+  .rev__q { top: 28px; left: 22px; font-size: 84px; height: 44px; }
+  .rev blockquote { font-size: 18.5px; line-height: 1.58; }
+  .rev blockquote p + p { margin-top: 13px; }
+  .rev figcaption { margin-top: 26px; padding-top: 18px; }
+  .rev__name { font-size: 24px; }
+  .rev__course { font-size: 11px; }
+  .revs__more { margin-top: 52px; }
+}
+@media (prefers-reduced-motion: reduce) { .revs .dots span { animation: none; } }
