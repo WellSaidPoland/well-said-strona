@@ -1258,3 +1258,8 @@ body > main > * { flex-shrink: 0; }
   .revs__more { margin-top: 52px; }
 }
 @media (prefers-reduced-motion: reduce) { .revs .dots span { animation: none; } }
+
+/* kolejne kartki przekrzywione na zmianę */
+.rev:nth-child(even) .rev__sheet { transform: rotate(-.5deg); }
+.rev:nth-child(even)::before { transform: rotate(1.3deg); }
+@media (max-width: 860px) { .rev:nth-child(even) .rev__sheet { transform: rotate(-.3deg); } .rev:nth-child(even)::before { transform: rotate(1.1deg); } }
