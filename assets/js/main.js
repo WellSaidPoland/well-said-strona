@@ -350,3 +350,18 @@
       });
   });
 })();
+
+/* Opinie: powiększanie karteczek */
+(function () {
+  var m = document.querySelector('.rv-modal'); if (!m) return;
+  var inn = m.querySelector('.rv-modal__in'), last = null;
+  function close() { m.classList.remove('is-open'); document.body.classList.remove('rv-lock'); setTimeout(function () { if (!m.classList.contains('is-open')) { m.hidden = true; inn.innerHTML = ''; } }, 300); if (last) last.focus(); }
+  document.querySelectorAll('.revs__list .rev').forEach(function (r) {
+    r.tabIndex = 0; r.setAttribute('role', 'button'); r.setAttribute('aria-label', 'Przeczytaj całą opinię: ' + (r.querySelector('.rev__name') || {}).textContent);
+    function open() { last = r; var c = r.cloneNode(true); ['role', 'tabindex', 'aria-label'].forEach(function (a) { c.removeAttribute(a); }); inn.innerHTML = ''; inn.appendChild(c); m.hidden = false; m.scrollTop = 0; requestAnimationFrame(function () { m.classList.add('is-open'); }); document.body.classList.add('rv-lock'); m.querySelector('.rv-modal__x').focus(); }
+    r.addEventListener('click', open);
+    r.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+  });
+  m.addEventListener('click', function (e) { if (e.target === m || e.target.closest('.rv-modal__x')) close(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && m.classList.contains('is-open')) close(); });
+})();
