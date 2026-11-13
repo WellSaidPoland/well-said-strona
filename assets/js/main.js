@@ -188,7 +188,7 @@
 
   /* --- dostępność terminów --- */
   var av = { mode: null, off: 0, sel: null, slots: [], days: [], hours: [] };
-  var HOURS = []; for (var h = 9; h <= 20; h++) HOURS.push(h);
+  var HOURS = []; for (var h = 10; h <= 20; h++) HOURS.push(h);
   var WD = ['PN', 'WT', 'ŚR', 'CZW', 'PT', 'SOB', 'ND'];
   var WD_LONG = ['poniedziałki', 'wtorki', 'środy', 'czwartki', 'piątki', 'soboty', 'niedziele'];
   var MONTHS = ['STYCZEŃ', 'LUTY', 'MARZEC', 'KWIECIEŃ', 'MAJ', 'CZERWIEC', 'LIPIEC', 'SIERPIEŃ', 'WRZESIEŃ', 'PAŹDZIERNIK', 'LISTOPAD', 'GRUDZIEŃ'];
