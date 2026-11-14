@@ -365,3 +365,129 @@
   m.addEventListener('click', function (e) { if (e.target === m || e.target.closest('.rv-modal__x')) close(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && m.classList.contains('is-open')) close(); });
 })();
+
+/* Zajęcia grupowe: zapisy i liczba chętnych */
+(function () {
+  var form = document.querySelector('[data-gr-form]'); if (!form) return;
+  var API = '/api/grupy.php', SEATS = 4, MAXP = 6;
+  var DAYS = ['Pn', 'Wt', 'Śr', 'Cz', 'Pt'], DN = { 'Pn': 'pon.', 'Wt': 'wt.', 'Śr': 'śr.', 'Cz': 'czw.', 'Pt': 'pt.' };
+  var DFULL = { 'Pn': 'poniedziałek', 'Wt': 'wtorek', 'Śr': 'środa', 'Cz': 'czwartek', 'Pt': 'piątek' };
+  var HOURS = []; for (var h = 10; h <= 19; h++) HOURS.push(h);
+  var t0 = Date.now(), level = 0, tab = '1', data = null, mine = [], tried = false;
+  var pairsEl = form.querySelector('[data-pairs]'), addBtn = form.querySelector('[data-add]');
+  var bars = document.querySelector('[data-bars]'), btn = form.querySelector('[data-gr-btn]'), msg = form.querySelector('[data-gr-msg]');
+
+  function slotHtml(n) {
+    return '<div class="gr__slot" data-slot="' + n + '"><span class="gr__slot-l">ZAJĘCIA NR ' + n + '</span>' +
+      '<div class="gr__days" role="radiogroup" aria-label="Dzień zajęć nr ' + n + '">' + DAYS.map(function (d) {
+        return '<button type="button" class="chip gr__day" role="radio" aria-checked="false" aria-label="' + DFULL[d] + '" data-d="' + d + '">' + d + '</button>';
+      }).join('') + '</div>' +
+      '<select class="gr__sel" aria-label="Godzina zajęć nr ' + n + '"><option value="">Godzina</option>' +
+      HOURS.map(function (x) { return '<option value="' + x + '">' + x + ':00 - ' + (x + 1) + ':00</option>'; }).join('') + '</select></div>';
+  }
+  function renumber() {
+    var ps = pairsEl.querySelectorAll('.gr__pair');
+    ps.forEach(function (p, i) { p.querySelector('.gr__pair-t').textContent = 'Propozycja ' + (i + 1); var x = p.querySelector('.gr__x'); if (x) x.hidden = ps.length === 1; });
+    addBtn.hidden = ps.length >= MAXP;
+  }
+  function addPair() {
+    var el = document.createElement('div'); el.className = 'gr__pair';
+    el.innerHTML = '<span class="gr__pair-t"></span><button type="button" class="gr__x" aria-label="Usuń propozycję">×</button>' + slotHtml(1) + slotHtml(2);
+    pairsEl.appendChild(el); renumber(); return el;
+  }
+  function syncDays(p) {
+    var s1 = p.querySelector('[data-slot="1"] .is-on'), s2 = p.querySelector('[data-slot="2"] .is-on');
+    p.querySelectorAll('[data-slot="1"] .gr__day').forEach(function (b) { b.disabled = !!s2 && b.dataset.d === s2.dataset.d; });
+    p.querySelectorAll('[data-slot="2"] .gr__day').forEach(function (b) { b.disabled = !!s1 && b.dataset.d === s1.dataset.d; });
+  }
+  pairsEl.addEventListener('click', function (e) {
+    var d = e.target.closest('.gr__day'), x = e.target.closest('.gr__x');
+    if (d) {
+      var slot = d.closest('.gr__slot');
+      slot.querySelectorAll('.gr__day').forEach(function (b) { var on = b === d; b.classList.toggle('is-on', on); b.setAttribute('aria-checked', on); });
+      syncDays(d.closest('.gr__pair')); if (tried) check();
+    }
+    if (x) { x.closest('.gr__pair').remove(); renumber(); if (tried) check(); }
+  });
+  pairsEl.addEventListener('change', function () { if (tried) check(); });
+  addBtn.addEventListener('click', function () { addPair(); });
+  addPair();
+
+  form.querySelectorAll('.gr__lvl').forEach(function (b) {
+    b.addEventListener('click', function () {
+      level = +b.dataset.lvl;
+      form.querySelectorAll('.gr__lvl').forEach(function (x) { var on = x === b; x.classList.toggle('is-on', on); x.setAttribute('aria-checked', on); });
+      setTab(String(level)); if (tried) check();
+    });
+  });
+
+  function readPairs() {
+    var out = [], ok = true;
+    pairsEl.querySelectorAll('.gr__pair').forEach(function (p) {
+      var d1 = p.querySelector('[data-slot="1"] .is-on'), d2 = p.querySelector('[data-slot="2"] .is-on');
+      var h1 = p.querySelector('[data-slot="1"] select').value, h2 = p.querySelector('[data-slot="2"] select').value;
+      var good = d1 && d2 && h1 && h2 && d1.dataset.d !== d2.dataset.d;
+      p.classList.toggle('has-err', tried && !good);
+      if (good) out.push([d1.dataset.d, +h1, d2.dataset.d, +h2]); else ok = false;
+    });
+    return ok ? out : null;
+  }
+  function check() {
+    var name = form.name.value.trim(), email = form.email.value.trim();
+    var c = { level: level > 0, name: name.length >= 3 && name.split(/\s+/).length >= 2, email: /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email), pairs: !!readPairs(), consent: form.consent.checked };
+    ['level', 'name', 'email'].forEach(function (k) { form.querySelector('[data-f="' + k + '"]').classList.toggle('has-err', tried && !c[k]); });
+    form.querySelector('[data-pairs-err]').classList.toggle('is-on', tried && !c.pairs);
+    form.querySelector('[data-consent-err]').classList.toggle('is-on', tried && !c.consent);
+    return c.level && c.name && c.email && c.pairs && c.consent;
+  }
+  form.addEventListener('input', function () { if (tried) check(); });
+
+  function key(r) { return r.a[0] + r.a[1] + r.b[0] + r.b[1]; }
+  function norm(p) { return DAYS.indexOf(p[0]) <= DAYS.indexOf(p[2]) ? { a: [p[0], p[1]], b: [p[2], p[3]] } : { a: [p[2], p[3]], b: [p[0], p[1]] }; }
+  function render() {
+    var rows = data && data.levels ? (data.levels[tab] || []) : null;
+    if (!rows) { bars.innerHTML = '<li class="gr__empty">Wczytuję…</li>'; return; }
+    if (!rows.length) { bars.innerHTML = '<li class="gr__empty">Na ten poziom nikt jeszcze się nie zapisał. Bądź pierwszą osobą!</li>'; return; }
+    bars.innerHTML = rows.map(function (r) {
+      var n = r.n, full = n >= SEATS, s = '', extra = '';
+      for (var i = 0; i < SEATS; i++) s += '<i' + (i < n ? ' class="on"' : '') + '></i>';
+      var left = SEATS - n;
+      if (!full) extra = 'Brakuje ' + left + (left === 1 ? ' osoby' : ' osób');
+      else if (n > SEATS) extra = 'Chętnych jest więcej: ' + n + '. Mogę otworzyć kolejną grupę.';
+      var isMine = mine.some(function (m) { return m.lvl === tab && m.k === key(r); });
+      return '<li class="gr__bar' + (full ? ' is-full' : '') + (isMine ? ' is-mine' : '') + '"><div class="gr__bar-top"><span class="gr__bar-t">' +
+        DN[r.a[0]] + ' ' + r.a[1] + ':00 + ' + DN[r.b[0]] + ' ' + r.b[1] + ':00</span><span class="gr__bar-n">' + (full ? 'GRUPA KOMPLETNA' : n + ' / ' + SEATS) + '</span></div>' +
+        '<div class="gr__seats" aria-hidden="true">' + s + '</div>' + (extra ? '<p class="gr__extra">' + extra + '</p>' : '') + '</li>';
+    }).join('');
+  }
+  function setTab(t) {
+    tab = t;
+    document.querySelectorAll('.gr__tab').forEach(function (x) { var on = x.dataset.tab === t; x.classList.toggle('is-on', on); x.setAttribute('aria-selected', on); });
+    render();
+  }
+  document.querySelectorAll('.gr__tab').forEach(function (x) { x.addEventListener('click', function () { setTab(x.dataset.tab); }); });
+  render();
+  fetch(API, { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) { if (d && d.ok) { data = d; render(); } })
+    .catch(function () { bars.innerHTML = '<li class="gr__empty">Nie udało się wczytać wyników. Odśwież stronę.</li>'; });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault(); tried = true; msg.textContent = ''; msg.classList.remove('is-err');
+    if (!check()) { var f = form.querySelector('.has-err, .is-on.fld__err'); if (f) f.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+    var pairs = readPairs();
+    btn.disabled = true; btn.textContent = 'WYSYŁAM…';
+    fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
+      level: level, pairs: pairs, name: form.name.value.trim(), email: form.email.value.trim(), consent: form.consent.checked, website: form.website.value, t: t0
+    }) }).then(function (r) { return r.json().catch(function () { return { ok: false }; }); }).then(function (d) {
+      if (!d.ok) throw new Error(d.error || '');
+      data = d;
+      mine = pairs.map(function (p) { return { lvl: String(level), k: key(norm(p)) }; });
+      setTab(String(level));
+      btn.textContent = 'DZIĘKUJĘ, TWOJE GŁOSY SĄ ZAPISANE!'; btn.classList.add('is-sent');
+      msg.textContent = d.updated ? 'Dopisałam te propozycje do Twojego wcześniejszego zgłoszenia. Napiszę do Ciebie, gdy grupa się zapełni.' : 'Napiszę do Ciebie, gdy Twoja grupa się zapełni. Wyniki obok już uwzględniają Twoje głosy.';
+      if (window.innerWidth <= 960) document.querySelector('.gr__res').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }).catch(function (err) {
+      btn.disabled = false; btn.textContent = 'ZAPISZ MOJE GŁOSY'; msg.classList.add('is-err');
+      msg.innerHTML = (err && err.message) ? err.message : 'Nie udało się wysłać zgłoszenia. Spróbuj ponownie albo napisz na <a href="mailto:kontakt@well-said.pl">kontakt@well-said.pl</a>.';
+    });
+  });
+})();
