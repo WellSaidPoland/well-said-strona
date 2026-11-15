@@ -1386,3 +1386,153 @@ body.rv-lock { overflow: hidden; }
   .gr__lead { font-size: 16px; }
   .gr__day { width: 44px; height: 40px; }
 }
+
+/* Zajęcia grupowe: cennik */
+.gr { background: #141f18; --line-blue: rgba(214,224,205,.28); --accent: #c9d5b5; --muted: #a9b5ac; --text-soft: #d5ddd7; }
+.gr h1 em { display: block; margin-top: 10px; font-style: italic; font-size: .62em; color: var(--accent); }
+.gr .chip.is-on, .gr .chip[aria-pressed="true"], .gr__lvl.is-on { color: #141f18; }
+.gr__sel option { color: #141f18; }
+.gr__send .btn { color: #141f18; }
+.gr__send .btn.is-sent { background: var(--accent); }
+.gr__price { position: relative; background: #202022; border: 0; padding: 40px 44px 40px; margin: -20px 0 64px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 40px; align-items: end; box-shadow: 0 24px 50px rgba(0,0,0,.25); }
+.gr__price .gr__resl { color: #c9ccd3; }
+.gr__plist { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 24px; }
+.gr__pitem { display: flex; flex-direction: column; gap: 6px; padding: 0 28px; border-left: 1px solid rgba(244,245,247,.18); opacity: 0; transform: translateX(-22px); transition: opacity .7s var(--ease), transform .7s var(--ease-out); }
+.gr__pitem:first-child { padding-left: 0; border-left: 0; }
+.gr__price.is-in .gr__pitem { opacity: 1; transform: none; }
+.gr__price.is-in .gr__pitem:nth-child(1) { transition-delay: .2s; }
+.gr__price.is-in .gr__pitem:nth-child(2) { transition-delay: .6s; }
+.gr__price.is-in .gr__pitem:nth-child(3) { transition-delay: 1s; }
+.gr__plvl { font-family: var(--sans); font-size: 12.5px; letter-spacing: .18em; color: #a8acb5; text-transform: uppercase; }
+.gr__plvl b { color: var(--paper); font-weight: 500; }
+.gr__pval { font-family: var(--serif); font-size: 52px; line-height: 1.05; color: var(--paper); font-variant-numeric: lining-nums; }
+.gr__pnote { margin: 16px 0 0; font-size: 13.5px; font-style: italic; color: #a8acb5; }
+.gr__pfacts { list-style: none; margin: 24px 0 0; padding: 22px 0 0; border-top: 1px solid rgba(244,245,247,.18); display: flex; flex-wrap: wrap; gap: 10px 28px; }
+.gr__pfacts li { position: relative; padding-left: 18px; font-family: var(--sans); font-weight: 400; font-size: 16.5px; letter-spacing: .01em; color: #eceef1; }
+.gr__pfacts li::before { content: ""; position: absolute; left: 0; top: .55em; width: 7px; height: 7px; background: #c9d5b5; }
+/* kartka z regulaminem */
+.gr__doc { display: block; justify-self: end; perspective: 600px; opacity: 0; transform: translateY(20px); transition: opacity .8s var(--ease) 1.3s, transform .8s var(--ease-out) 1.3s; }
+.gr__price.is-in .gr__doc { opacity: 1; transform: none; }
+.gr__doc-sheet { position: relative; display: flex; flex-direction: column; width: 200px; height: 256px; padding: 24px 22px 20px; background: #fbfaf6; color: var(--navy); box-shadow: 0 16px 34px rgba(0,0,0,.4), 0 2px 6px rgba(0,0,0,.25); transform: none; transition: transform .4s var(--ease-out), box-shadow .4s; clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 0 100%); }
+.gr__doc-sheet::before { content: ""; position: absolute; top: 0; right: 0; width: 30px; height: 30px; background: linear-gradient(225deg, #202022 50%, #d9d6cc 50%); }
+.gr__doc-sheet::after { content: ""; position: absolute; inset: 0; background: url(/assets/img/paper-grain.svg); opacity: .18; pointer-events: none; }
+.gr__doc:hover .gr__doc-sheet, .gr__doc:focus-visible .gr__doc-sheet { transform: translateY(-6px); box-shadow: 0 26px 44px rgba(0,0,0,.45), 0 2px 6px rgba(0,0,0,.25); }
+.gr__doc-par { font-family: var(--serif); font-size: 34px; line-height: 1; color: var(--navy); opacity: .55; }
+.gr__doc-lines { display: flex; flex-direction: column; gap: 8px; margin: 14px 0 auto; }
+.gr__doc-lines i { display: block; height: 2px; background: #d6d8de; }
+.gr__doc-lines i:nth-child(2) { width: 86%; } .gr__doc-lines i:nth-child(4) { width: 70%; } .gr__doc-lines i:nth-child(5) { width: 52%; }
+.gr__doc-t { font-family: var(--sans); font-size: 15.5px; font-weight: 600; letter-spacing: .16em; line-height: 1.45; color: var(--navy); }
+.gr__doc-arr { position: absolute; right: 18px; bottom: 16px; font-size: 20px; color: var(--navy); transition: transform .3s var(--ease); }
+.gr__doc:hover .gr__doc-arr { transform: translateX(4px); }
+@media (prefers-reduced-motion: reduce) { .gr__pitem, .gr__doc { opacity: 1; transform: none; transition: none; } }
+.legal ol { margin: 8px 0 0; padding-left: 22px; }
+.legal ol li + li { margin-top: 6px; }
+.legal a { color: var(--navy); text-decoration: underline; }
+@media (max-width: 860px) {
+  .gr__price { grid-template-columns: 1fr; padding: 28px 20px 32px; margin: -16px 0 52px; gap: 30px; }
+  .gr__plist { grid-template-columns: 1fr; gap: 16px; }
+  .gr__pitem { padding: 0 0 12px; border-left: 0; flex-direction: row; justify-content: space-between; align-items: baseline; border-bottom: 1px solid rgba(244,245,247,.18); }
+  .gr__pval { font-size: 38px; }
+  .gr__pfacts { flex-direction: column; }
+  .gr__doc { justify-self: center; }
+}
+
+/* Zajęcia grupowe: kafelki formularza w kolorze grafitowym */
+.gr .gr__lvl, .gr .gr__day, .gr__pair, .gr__add { background: #202022; border-color: rgba(244,245,247,.16); }
+.gr .gr__lvl:hover, .gr .gr__day:hover, .gr__add:hover { border-color: rgba(244,245,247,.6); }
+.gr .gr__lvl.is-on, .gr .gr__day.is-on { background: var(--paper); border-color: var(--paper); }
+.gr .gr__day:disabled { background: #202022; }
+.gr__pair { box-shadow: 0 10px 24px rgba(0,0,0,.18); }
+.gr__pair .gr__day { background: #2b2b2e; }
+.gr__pair .gr__day.is-on { background: var(--paper); }
+.gr__add { border-style: solid; }
+@media (max-width: 860px) { .gr__pfacts li { font-size: 16px; } }
+
+/* Zajęcia grupowe: tło ze zdjęciem i wyraźne numery kroków */
+.gr { padding-top: 0; }
+/* ustawienia tła (wybrane przez Weronikę w narzędziu z suwakami) */
+.gr__hero { --bg-zoom: 1.55; --bg-x: 33%; --bg-y: 52%; --bg-op: .4; --bg-end: 100%; --bg-fade: 53%;
+  position: relative; padding: 150px 0 96px; margin-bottom: 8px; isolation: isolate; overflow: hidden; }
+.gr__bg { position: absolute; inset: 0; z-index: -2; overflow: hidden; pointer-events: none;
+  -webkit-mask-image: linear-gradient(180deg, #000 calc(var(--bg-end) - var(--bg-fade)), transparent var(--bg-end)); mask-image: linear-gradient(180deg, #000 calc(var(--bg-end) - var(--bg-fade)), transparent var(--bg-end)); }
+.gr__bg::before { content: ""; position: absolute; inset: 0; background: url(/assets/img/military/grupy-bg.webp) var(--bg-x) var(--bg-y) / cover no-repeat;
+  opacity: var(--bg-op); transform: scale(var(--bg-zoom)); transform-origin: var(--bg-x) var(--bg-y);
+  filter: grayscale(100%) brightness(80%) contrast(110%); }
+.gr__hero::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(20,31,24,.55) 0%, rgba(20,31,24,0) 22%); }
+.gr__hero .gr__price { margin-bottom: 0; }
+.gr__step { padding-left: 84px; }
+.gr__no { top: -14px; width: 60px; font-size: 50px; font-weight: 500; line-height: 1; color: var(--accent); opacity: 1; font-variant-numeric: lining-nums; }
+.gr__no::after { content: ""; display: block; width: 36px; height: 2px; margin-top: 10px; background: var(--accent); opacity: .6; }
+@media (max-width: 960px) {
+  .gr__step { padding-left: 0; }
+  .gr__no { position: static; font-size: 42px; margin-bottom: 4px; }
+  .gr__no::after { margin-top: 8px; }
+}
+@media (max-width: 860px) {
+  .gr__hero { --bg-zoom: 1.05; --bg-x: 27%; --bg-y: 89%; --bg-op: .72; --bg-end: 48%; --bg-fade: 44%; padding: 48px 0 64px; }
+  .gr__hero h1 { font-size: 40px; margin: 36px 0 22px; }
+  .gr__hero .gr__lead { font-size: 16px; }
+  .gr__hero .gr__head { margin-bottom: 44px; }
+  .gr__hero .gr__price { margin-top: 0; }
+}
+
+/* Zajęcia grupowe: teksty na komputerze (ustawione przez Weronikę) */
+@media (min-width: 861px) {
+  .gr__hero { padding-top: 86px; }
+  .gr__hero h1 { font-size: 74px; margin: 60px 0 26px; }
+  .gr__hero .gr__head { max-width: none; margin-bottom: 86px; }
+  .gr__hero .gr__lead { font-size: 18.5px; max-width: 690px; }
+  .gr__hero .gr__price { margin-top: 0; }
+}
+
+/* Zajęcia grupowe: górny napis jak w zakładkach oferty (Business English) */
+.gr__head .gr__lb { font-family: var(--serif); font-size: 15px; letter-spacing: .3em; font-variant-numeric: lining-nums; }
+@media (max-width: 860px) { .gr__head .gr__lb { font-size: 14px; letter-spacing: .28em; } }
+
+/* Zajęcia grupowe: nagłówek i cennik wyrównane jak na stronie Military English */
+.gr__hero > .wrap { max-width: none; }
+
+/* Zajęcia grupowe: animacja cennika - kreska rośnie, nazwa poziomu pojawia się, cena wyłania się spod linii */
+.gr__pitem { opacity: 1; transform: none; transition: none; position: relative; border-left-color: transparent; --d: 0s; }
+.gr__pitem:nth-child(1) { --d: .25s; } .gr__pitem:nth-child(2) { --d: .75s; } .gr__pitem:nth-child(3) { --d: 1.25s; }
+.gr__pitem:not(:first-child)::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: rgba(244,245,247,.18); transform: scaleY(0); transform-origin: top; transition: transform .7s var(--ease-out) var(--d); }
+.gr__plvl { opacity: 0; transform: translateY(8px); transition: opacity .6s var(--ease) calc(var(--d) + .15s), transform .6s var(--ease-out) calc(var(--d) + .15s); }
+.gr__pval { clip-path: inset(0 0 100% 0); transform: translateY(26px); transition: clip-path 1s var(--ease-out) calc(var(--d) + .3s), transform 1s var(--ease-out) calc(var(--d) + .3s); }
+.gr__price.is-in .gr__pitem::before { transform: scaleY(1); }
+.gr__price.is-in .gr__plvl { opacity: 1; transform: none; }
+.gr__price.is-in .gr__pval { clip-path: inset(-10% -5% -10% -5%); transform: none; }
+.gr__doc { transition: opacity .9s var(--ease) 2s, transform .9s var(--ease-out) 2s; }
+@media (max-width: 860px) { .gr__pitem::before { display: none; } .gr__pitem { border-bottom-color: rgba(244,245,247,.18); } }
+@media (prefers-reduced-motion: reduce) { .gr__plvl, .gr__pval, .gr__doc { opacity: 1; transform: none; clip-path: none; transition: none; } .gr__pitem::before { transform: none; } }
+
+/* Regulaminy: wersja do druku i PDF */
+@media print {
+  @page { size: A4; margin: 14mm 15mm; }
+  .nav, .footer, .skip-link { display: none !important; }
+  body { background: #fff; }
+  .legal { padding: 0; background: #fff; }
+  .legal .wrap { max-width: none; padding: 0; }
+  .legal__lb { font-size: 10pt; margin-bottom: 6pt; }
+  .legal h1 { font-size: 22pt; margin-bottom: 4pt; }
+  .legal__date { font-size: 9.5pt; margin-bottom: 12pt; }
+  .legal h2 { font-size: 13pt; margin: 12pt 0 4pt; break-after: avoid; }
+  .legal p, .legal li { font-size: 9.6pt; line-height: 1.5; }
+  .legal li + li { margin-top: 2pt; }
+  .legal p + p { margin-top: 4pt; }
+  .legal a { color: #14213d; }
+}
+
+/* Regulamin zajęć grupowych: wyśrodkowany tytuł, wyraźniejsze nagłówki paragrafów */
+.legal--grp .legal__lb, .legal--grp h1, .legal--grp .legal__date { text-align: center; }
+.legal--grp .legal__lb { font-size: 16px; }
+.legal--grp h1 { font-size: 54px; }
+.legal--grp .legal__date { margin-bottom: 64px; }
+.legal--grp h2 { font-size: 28px; }
+@media (max-width: 860px) { .legal--grp h1 { font-size: 36px; } .legal--grp .legal__date { margin-bottom: 40px; } .legal--grp h2 { font-size: 24px; } }
+@media print {
+  .legal--grp .legal__lb { font-size: 11pt; margin-bottom: 8pt; }
+  .legal--grp h1 { font-size: 25pt; margin-bottom: 6pt; }
+  .legal--grp .legal__date { font-size: 10pt; margin-bottom: 26pt; }
+  .legal--grp h2 { font-size: 15pt; margin: 14pt 0 5pt; }
+  .legal--grp h2.pb { break-before: page; margin-top: 0; }
+}
