@@ -1536,3 +1536,13 @@ body.rv-lock { overflow: hidden; }
   .legal--grp h2 { font-size: 15pt; margin: 14pt 0 5pt; }
   .legal--grp h2.pb { break-before: page; margin-top: 0; }
 }
+
+/* Military English (góra strony): link do zajęć grupowych obok przycisku */
+.mil-hero__cta { align-items: center; gap: 44px; }
+.mil-hero__cta .btn-light { flex: none; white-space: nowrap; }
+.mil-hero__cta .mil-cta__grp { margin: 0; max-width: 300px; font-size: 15px; line-height: 1.6; color: #d5ddd7; }
+@media (max-width: 860px) {
+  .mil-hero__cta { flex-direction: column; align-items: stretch; gap: 22px; }
+  .mil-hero__cta .btn-light { white-space: normal; }
+  .mil-hero__cta .mil-cta__grp { max-width: none; text-align: center; }
+}
